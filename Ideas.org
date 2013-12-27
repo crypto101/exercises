@@ -1,0 +1,18 @@
+* Crypto to break
+
+** Length extension attack: guest list!
+
+** Password database that sucks + password reuse
+Realistic :) "Strong" database: per-user salt + SHA-256, to emphasize its brokenness.
+
+** CTR mode with small counter: either huge nonce or small block size
+
+** Old SSLv2 machine, MITM the handshake, brute force the key
+
+** BEAST/CRIME attack based on compression
+** RSA without padding + weak public exponent, message sent to multiple people
+** DSA with reused k
+*** Totally bogus: always uses same k
+*** Kinda bogus: poor PRNG
+** Backdoor your own version of Dual_EC_DRBG
+** PRNG based on timeofday, maybe pid, other shitty entropy sources
