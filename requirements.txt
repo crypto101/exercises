@@ -1,2 +1,2 @@
 twisted==13.2.0
-merlyn==0.0.5
+merlyn==0.0.7
