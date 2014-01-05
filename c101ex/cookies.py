@@ -79,10 +79,10 @@ class Index(resource.Resource):
 templateString = """
 <html xmlns:t="http://twistedmatrix.com/ns/twisted.web.template/0.1">
   <body>
-    <div id="content">
-      <p t:render="message" />
-      <form t:render="registrationForm" method="POST" />
-    </div>
+    <h1>A website</h1>
+    <p t:render="message" />
+    <h2>Register</h2>
+    <form t:render="registrationForm" method="POST" />
   </body>
 </html>
 """
