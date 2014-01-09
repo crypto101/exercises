@@ -120,7 +120,7 @@ class IndexTemplate(template.Element):
 
         label = template.tags.label("Name:")
         name = template.tags.input(type="text", name="name", id="name")
-        submit = template.tags.input(type="submit")
+        submit = template.tags.input(type="submit", value="Register")
         return tag(label, name, submit)
 
 
