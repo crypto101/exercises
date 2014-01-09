@@ -4,10 +4,6 @@ from setuptools.command.test import test as TestCommand
 
 packageName = "c101ex"
 
-dependencies = [
-    "merlyn==0.0.6"
-]
-
 import re
 versionLine = open("{}/_version.py".format(packageName), "rt").read()
 match = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]", versionLine, re.M)
@@ -34,8 +30,6 @@ setup(name=packageName,
 
       packages=find_packages(),
       test_suite=packageName + ".test",
-
-      install_requires=dependencies,
 
       setup_requires=['tox'],
       cmdclass={'test': Tox},
