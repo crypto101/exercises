@@ -3,17 +3,24 @@ A website that uses cookies to determine admin status. Poorly.
 """
 from functools import partial
 from merlyn.multiplexing import addToStore
+from merlyn.exercise import SolvableResourceMixin
 from string import ascii_letters
 from twisted.web import resource, server, template
 
 
-class Index(resource.Resource):
+class Index(resource.Resource, SolvableResourceMixin):
     isLeaf = True
     cookieName = "soylentgreen"
+    exerciseIdentifier = "rot13-cookies"
+
+    def __init__(self, store):
+        resource.Resource.__init__(self)
+        SolvableResourceMixin.__init__(self, store)
+
 
     def render_GET(self, request):
-        """
-        Greets the user appropriately.
+        """Greets the user appropriately.
+
         """
         rawCookie = request.getCookie(self.cookieName)
         if rawCookie is None:
@@ -24,12 +31,15 @@ class Index(resource.Resource):
             name = contents.get("name")
             isAdmin = contents.get("admin") == "1"
 
+            if isAdmin:
+                self.solveAndNotify(request)
+
         return self._render(request, name, isAdmin)
 
 
     def render_POST(self, request):
-        """
-        Registers a user, setting their cookie.
+        """Registers a user, setting their cookie.
+
         """
         name, = request.args.get("name")
         name = "".join(x if x in ascii_letters else "" for x in name)
@@ -125,9 +135,12 @@ class IndexTemplate(template.Element):
 
 
 
-site = server.Site(Index())
-site.displayTracebacks = False
+def makeSite(store):
+    site = server.Site(Index(store))
+    site.displayTracebacks = False
+    return site
+
 
 addToStore = partial(addToStore,
                      identifier="rot13-cookies-site",
-                     name="c101ex.cookies.site")
+                     name="c101ex.cookies.makeSite")

@@ -2,6 +2,7 @@ from c101ex import cookies
 from twisted.trial.unittest import SynchronousTestCase
 from twisted.web.template import flattenString
 
+
 class IndexTemplateTests(SynchronousTestCase):
     def setUp(self):
         self.body = None
@@ -65,7 +66,7 @@ class IndexTemplateTests(SynchronousTestCase):
 
 class ResourceTests(SynchronousTestCase):
     def setUp(self):
-        self.resource = cookies.Index()
+        self.resource = cookies.Index(None)
 
 
     def test_isLeaf(self):
@@ -79,7 +80,8 @@ class ResourceTests(SynchronousTestCase):
         """The site has tracebacks disabled.
 
         """
-        self.assertFalse(cookies.site.displayTracebacks)
+        site = cookies.makeSite(None)
+        self.assertFalse(site.displayTracebacks)
 
 
     def test_endToEnd(self):
@@ -107,8 +109,43 @@ class ResourceTests(SynchronousTestCase):
         self.assertEqual(data["name"], "StringTrepanation")
 
 
-    def test_renderAdmin(self):
+    def test_renderNotAdmin(self):
+        """Tries to render the template for a use that is not an
+        administrator.
+
+        Verifies that the registration form isn't sent, and that the
+        exercise is not solved.
+
+        """
         request = FakeRequest()
+
+        self._solvedRequest = None
+        self.resource.solveAndNotify = self._solveAndNotify
+
+        rawCookie = self.resource._encodeCookie({"name": "lvh"})
+        cookie = self.resource._encryptCookie(rawCookie)
+        request.addCookie(self.resource.cookieName, cookie)
+
+        self.resource.render_GET(request)
+        self.assertTrue(request.finished)
+        self.assertNotIn("you are an administrator", request.body)
+        self.assertNotIn("form", request.body)
+
+        self.assertIdentical(self._solvedRequest, None)
+
+
+    def test_renderAdmin(self):
+        """Tries to render the template for a use that is an administrator.
+
+        Verifies that the registration form isn't sent, the welcome
+        message says that the user is an administrator, and that the
+        user has been notified of success.
+
+        """
+        request = FakeRequest()
+
+        self._solvedRequest = None
+        self.resource.solveAndNotify = self._solveAndNotify
 
         rawCookie = self.resource._encodeCookie({"name": "lvh", "admin": "1"})
         cookie = self.resource._encryptCookie(rawCookie)
@@ -117,6 +154,16 @@ class ResourceTests(SynchronousTestCase):
         self.resource.render_GET(request)
         self.assertTrue(request.finished)
         self.assertIn("you are an administrator", request.body)
+        self.assertNotIn("form", request.body)
+
+        self.assertIdentical(self._solvedRequest, request)
+
+
+    def _solveAndNotify(self, request):
+        """Fake solveAndNotify implementation that just remembers the request.
+
+        """
+        self._solvedRequest = request
 
 
 
