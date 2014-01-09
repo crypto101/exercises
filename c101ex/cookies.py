@@ -81,7 +81,6 @@ templateString = """
   <body>
     <h1>A website</h1>
     <p t:render="message" />
-    <h2>Register</h2>
     <form t:render="registrationForm" method="POST" />
   </body>
 </html>
