@@ -1,8 +1,5 @@
 * Crypto to break
 
-** Password database that sucks + password reuse
-Realistic :) "Strong" database: per-user salt + SHA-256, to emphasize its brokenness.
-
 ** CTR mode with small counter: either huge nonce or small block size
 
 ** Old SSLv2 machine, MITM the handshake, brute force the key
