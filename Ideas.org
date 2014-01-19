@@ -1,7 +1,5 @@
 * Crypto to break
 
-** Length extension attack: guest list!
-
 ** Password database that sucks + password reuse
 Realistic :) "Strong" database: per-user salt + SHA-256, to emphasize its brokenness.
 
