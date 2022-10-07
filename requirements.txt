@@ -1,2 +1,2 @@
-twisted==19.2.1
+twisted==22.4.0
 -e /Users/lvh/Code/Crypto101/merlyn
